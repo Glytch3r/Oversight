@@ -1,0 +1,10 @@
+Sandbox_EN = {
+    Sandbox_Oversight = "Admin Fence",
+
+	Sandbox_Oversight_showTrailingMarkers = "Show Trailing Markers ",
+    Sandbox_Oversight_showTrailingMarkers_tooltip  = "Turn on/off Visual effects during Trailing light mode",
+	Sandbox_Oversight_ClearRadius = "Clear Radius =",
+    Sandbox_Oversight_ClearRadius_tooltip  = "Radius for Area Clear functions",
+
+
+}

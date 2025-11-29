@@ -1,0 +1,23 @@
+VERSION = 1,
+
+option Oversight.showTrailingMarkers
+{
+	type = boolean, default = true,
+	page = Oversight, translation = Oversight_showTrailingMarkers,
+}
+option Oversight.ClearRadius
+{
+	type = integer, min = 0, max = 100, default = 15,
+	page = Oversight, translation = Oversight_ClearRadius,
+}
+
+	
+
+
+
+
+
+
+
+
+
