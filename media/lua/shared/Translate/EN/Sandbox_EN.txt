@@ -1,10 +1,16 @@
 Sandbox_EN = {
-    Sandbox_Oversight = "Admin Fence",
+    Sandbox_Oversight = "Oversight",
 
 	Sandbox_Oversight_showTrailingMarkers = "Show Trailing Markers ",
     Sandbox_Oversight_showTrailingMarkers_tooltip  = "Turn on/off Visual effects during Trailing light mode",
-	Sandbox_Oversight_ClearRadius = "Clear Radius =",
+	Sandbox_Oversight_ClearRadius = "Clear Radius ",
     Sandbox_Oversight_ClearRadius_tooltip  = "Radius for Area Clear functions",
+	Sandbox_Oversight_HideAvatar = "Hide Avatar ",
+    Sandbox_Oversight_HideAvatar_tooltip  = "Hides the shadow and player visuals",
+	Sandbox_Oversight_AutoInvisible = "Auto Invisible ",
+    Sandbox_Oversight_AutoInvisible_tooltip  = "Auto Invisible During Spectate",
 
+	Sandbox_Oversight_ScoreboardSlowerRefresh = "Scoreboard Slower Refresh ",
+    Sandbox_Oversight_ScoreboardSlowerRefresh_tooltip  = "Turn this option ON To reduce lag caused by the panel",
 
 }

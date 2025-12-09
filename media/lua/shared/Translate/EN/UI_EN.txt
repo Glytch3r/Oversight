@@ -1,0 +1,20 @@
+
+UI_EN = {
+
+	UI_optionscreen_binding_Oversight = "Oversight",
+	UI_optionscreen_binding_Oversight_OffsetForward = "Offset Forward",
+	UI_optionscreen_binding_Oversight_OffsetLeft = "Offset Left",
+	UI_optionscreen_binding_Oversight_OffsetBackward = "Offset Backward",
+	UI_optionscreen_binding_Oversight_OffsetRight = "Offset Right",
+
+	UI_optionscreen_binding_Oversight_StopSpectate = "Stop Spectate",
+
+	UI_optionscreen_binding_Oversight_OffsetUp = "Offset Up",
+	UI_optionscreen_binding_Oversight_OffsetDown = "Offset Down",
+
+	UI_optionscreen_binding_Oversight_SelectPrev = "Previous Player To Spectate",
+	UI_optionscreen_binding_Oversight_SelectNext = "Next Player To Spectate",
+
+
+}
+

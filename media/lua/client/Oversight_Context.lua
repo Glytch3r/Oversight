@@ -26,8 +26,6 @@ function Oversight.isOnOrOff(bool)
     return bool and "On" or "Off"
 end
 
-
-
 function Oversight.context(plNum, context, worldobjects, test)
     local pl = getSpecificPlayer(plNum)
     if not pl or not pl:isAlive() then return end
@@ -47,7 +45,30 @@ function Oversight.context(plNum, context, worldobjects, test)
 
     local dist = csq:DistTo(sq:getX(), sq:getY())
     if (dist and dist <= 3) or getCore():getDebug() then
- 
+   
+        if Oversight.isSpectating(pl) then
+            local optTip = context:addOptionOnTop("Stop Spectate Mode Off", worldobjects, function()            
+                Oversight.setSpectate(nil)         
+                getSoundManager():playUISound("UIActivateMainMenuItem")
+                context:hideAndChildren()
+            end)
+
+        end
+        
+        if ExtendedScoreboard then
+            local optTip =  opt:addOption("Extended Scoreboard", worldobjects, function()
+                ExtendedScoreboard.openPanel()
+                getSoundManager():playUISound("UIActivateMainMenuItem")
+                context:hideAndChildren()
+            end)
+            if ExtendedScoreboard.instance then
+                optTip.iconTexture = getTexture("media/ui/Search_Icon_Off.png")
+            else
+                optTip.iconTexture = getTexture("media/ui/Search_Icon_On.png")
+            end
+        end
+        
+
         local trailLightStatus = Oversight.isTrailingLightMode(pl) or false
         local optTip = opt:addOption("Trailing Light:  "..tostring(Oversight.isOnOrOff(trailLightStatus)), worldobjects, function()            
             Oversight.toggleTrailingLightMode(pl)            
@@ -55,6 +76,7 @@ function Oversight.context(plNum, context, worldobjects, test)
             context:hideAndChildren()
         end)
         optTip.iconTexture = getTexture("media/ui/Oversight/LightContextIcon.png")
+
 
         local isHideAdminTag = Oversight.isHideAdminTag(pl)
         local optTip =  opt:addOption("Hide Admin Tag:  "..tostring(Oversight.isOnOrOff(isHideAdminTag)), worldobjects, function()
@@ -204,32 +226,72 @@ function Oversight.context(plNum, context, worldobjects, test)
         end)
         optTip.iconTexture = getTexture("media/ui/Oversight/LearnContextIcon.png")
       
-        -----------------------            ---------------------------
-        if clickedPlayer and clickedPlayer ~= pl then 
-            if string.lower(pl:getAccessLevel()) == "admin" then
-                local targUser = clickedPlayer:getUsername() 
-                if targUser then         
-                    print( targUser ) 
-                    local optTip = context:addOptionOnTop("Spectate: "..tostring(targUser), worldobjects, function()            
-                        Oversight.setSpectate(targUser)
-                        getSoundManager():playUISound("UIActivateMainMenuItem")
-                        context:hideAndChildren()
-                    end)
-                    optTip.iconTexture = getTexture("media/ui/Oversight/SpectateContextIcon.png")
-                end
-            end 
-        end 
     end
 end
 Events.OnFillWorldObjectContextMenu.Remove(Oversight.context)
 Events.OnFillWorldObjectContextMenu.Add(Oversight.context)
 
-
-function Oversight.hideAdminTrade(plNum, context, worldobjects, test)
-    if not clickedPlayer then return end    
-    if string.lower(clickedPlayer:getAccessLevel()) == "admin" or clickedPlayer:isInvisible()  or clickedPlayer:isGhostMode() then
-        context:removeOptionByName(getText("ContextMenu_Trade"))        
-    end 
+function Oversight.spectate(plNum, context, worldobjects, test)
+	local pl = getSpecificPlayer(plNum)    
+    if not pl then return end
+    if not pl:isAlive() then return end
+    if string.lower(pl:getAccessLevel()) ~= "admin" then return end
+    local sq = luautils.stringStarts(getCore():getVersion(), "42") and ISWorldObjectContextMenu.fetchVars.clickedSquare or clickedSquare
+    if not sq then return end
+    for i=1,sq:getMovingObjects():size() do
+        local targ = sq:getMovingObjects():get(i - 1)
+        if targ and instanceof(targ, "IsoPlayer") and targ ~= getPlayer() then
+            local targUser = targ:getUsername()
+            if targUser then
+                if string.lower(pl:getAccessLevel()) == "admin" then
+                    local optTip = context:addOptionOnTop("Spectate: "..tostring(targUser), worldobjects, function()            
+                        Oversight.setSpectate(targUser)
+                        getSoundManager():playUISound("UIActivateMainMenuItem")
+                        context:hideAndChildren()
+                    end)
+                end
+            end
+            if string.lower(targ:getAccessLevel()) == "admin" or targ:isInvisible()  or targ:isGhostMode() then
+                context:removeOptionByName(getText("ContextMenu_Trade"))        
+                getSoundManager():playUISound("UIActivateMainMenuItem")
+                context:hideAndChildren()
+            end 
+        end
+    end
 end
-Events.OnFillWorldObjectContextMenu.Remove(Oversight.hideAdminTrade)
-Events.OnFillWorldObjectContextMenu.Add(Oversight.hideAdminTrade)
+Events.OnFillWorldObjectContextMenu.Remove(Oversight.spectate)
+Events.OnFillWorldObjectContextMenu.Add(Oversight.spectate)
+
+--[[ 
+function Oversight.spectate(plNum, context, worldobjects, test)
+	local pl = getSpecificPlayer(plNum)    
+    if not pl then return end
+    if not pl:isAlive() then return end
+    if string.lower(pl:getAccessLevel()) ~= "admin" then return end
+    
+    local sq = luautils.stringStarts(getCore():getVersion(), "42") and ISWorldObjectContextMenu.fetchVars.clickedSquare or clickedSquare
+    if not sq then return end
+    
+    for i=1,sq:getMovingObjects():size() do
+        local targ = sq:getMovingObjects():get(i - 1)
+        if targ and instanceof(targ, "IsoPlayer") and targ ~= getPlayer() then
+            local targUser = targ:getUsername()
+            if targUser then
+                if string.lower(pl:getAccessLevel()) == "admin" then
+                    local optTip = context:addOptionOnTop("Spectate: "..tostring(targUser), worldobjects, function()            
+                        Oversight.setSpectate(targUser)
+                        getSoundManager():playUISound("UIActivateMainMenuItem")
+                        context:hideAndChildren()
+                    end)
+                end
+            end
+            if string.lower(targ:getAccessLevel()) == "admin" or targ:isInvisible() or targ:isGhostMode() then
+                context:removeOptionByName(getText("ContextMenu_Trade"))        
+            end 
+        end
+    end
+end
+
+Events.OnFillWorldObjectContextMenu.Remove(Oversight.spectate)
+Events.OnFillWorldObjectContextMenu.Add(Oversight.spectate)
+ ]]
